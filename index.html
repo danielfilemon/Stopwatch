@@ -1,52 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Stopwatch</title>
-    <style>
-        .stopwatch {
-            font-size: 48px;
-            text-align: center;
-            margin-top: 100px;
-        }
-        .btn {
-            font-size: 24px;
-            margin-top: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    text-align: center;
+    background: #fff;
+    padding: 30px 50px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 36px;
+  }
+  #stopwatch {
+    font-size: 48px;
+    color: #333;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  .btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  .btn:active {
+    background-color: #004080;
+  }
+</style>
 </head>
 <body>
-    <div class="stopwatch" id="stopwatch">0.0</div>
-    <button class="btn" onclick="startStopwatch()">Start</button>
-    <button class="btn" onclick="stopStopwatch()">Stop</button>
-    <button class="btn" onclick="resetStopwatch()">Reset</button>
 
-    <script>
-        var stopwatch;
-        var time = 0;
-        var running = false;
+<div class="container">
+  <h1>Stopwatch</h1>
+  <div id="stopwatch">00:00</div>
+  <div class="btn-container">
+    <button id="startBtn" class="btn" onclick="startStopwatch()">Start</button>
+    <button id="stopBtn" class="btn" onclick="stopStopwatch()">Stop</button>
+    <button id="resetBtn" class="btn" onclick="resetStopwatch()">Reset</button>
+  </div>
+</div>
 
-        function startStopwatch() {
-            if (!running) {
-                running = true;
-                stopwatch = setInterval(function() {
-                    time += 0.1;
-                    document.getElementById("stopwatch").textContent = time.toFixed(1);
-                }, 100);
-            }
-        }
+<script>
+let startTime;
+let stopwatchRunning = false;
+let stopwatch;
 
-        function stopStopwatch() {
-            if (running) {
-                running = false;
-                clearInterval(stopwatch);
-            }
-        }
+function startStopwatch() {
+  if (!stopwatchRunning) {
+    startTime = Date.now();
+    stopwatch = setInterval(updateStopwatch, 1000);
+    stopwatchRunning = true;
+  }
+}
 
-        function resetStopwatch() {
-            stopStopwatch();
-            time = 0;
-            document.getElementById("stopwatch").textContent = time.toFixed(1);
-        }
-    </script>
+function stopStopwatch() {
+  clearInterval(stopwatch);
+  stopwatchRunning = false;
+}
+
+function resetStopwatch() {
+  clearInterval(stopwatch);
+  document.getElementById('stopwatch').innerText = '00:00';
+  stopwatchRunning = false;
+}
+
+function updateStopwatch() {
+  const currentTime = Date.now();
+  const elapsed = currentTime - startTime;
+  const minutes = Math.floor(elapsed / 60000);
+  const seconds = Math.floor((elapsed % 60000) / 1000);
+  document.getElementById('stopwatch').innerText = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+}
+</script>
+
 </body>
 </html>
